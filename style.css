@@ -4,27 +4,80 @@ body {
   font-family: "Trebuchet MS", sans-serif;
 }
 
-.intro {
-  height: 250vh; 
+.scene {
+  height: 260vh;
 }
 
-.center-title {
+.scene-stage {
   position: sticky;
   top: 0;
   height: 100vh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.scene-composition {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(112rem, 140vw);
+  height: min(68rem, 112vh);
+  transform: translate(-50%, -50%) scale(1.9);
+  transform-origin: center center;
+}
+
+.center-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   width: fit-content;
-  margin: 0 auto;
-  transform: scale(1.4);
+  margin: 0;
+  transform: translate(-50%, -50%);
   transform-origin: center center;
+  z-index: 2;
 }
 
 .center-title h1 {
   margin: 0;
   text-align: left;
-  font-size: 220px;
+  font-size: clamp(5rem, 15vw, 13.75rem);
   line-height: 0.9;
   color: burlywood;
+}
+
+.category-card {
+  position: absolute;
+  min-width: 11rem;
+  padding: 1rem 1.25rem;
+  color: burlywood;
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(10px);
+  z-index: 1;
+}
+
+.about {
+  top: 2%;
+  left: 1%;
+  text-align: left;
+}
+
+.projects {
+  top: 3%;
+  right: 1%;
+  text-align: right;
+}
+
+.work {
+  bottom: 3%;
+  left: 2%;
+  text-align: left;
+}
+
+.extracurriculars {
+  right: 0%;
+  bottom: 4%;
+  text-align: right;
 }
