@@ -1,18 +1,30 @@
+body {
+  margin: 0;
+  background: #111111;
+  font-family: "Trebuchet MS", sans-serif;
+}
+
+.intro {
+  height: 250vh; 
+}
+
 .center-title {
+  position: sticky;
+  top: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: fit-content;
   margin: 0 auto;
+  transform: scale(1.4);
+  transform-origin: center center;
 }
 
 .center-title h1 {
   margin: 0;
-  line-height: 1.0;
   text-align: left;
-  font-size: 200px;
+  font-size: 220px;
+  line-height: 0.9;
   color: burlywood;
-  font-family: "Trebuchet MS", sans-serif;
-
 }
