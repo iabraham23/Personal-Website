@@ -8,15 +8,95 @@
     </head>
     <body>
         <main>
-            <section class="scene">
+            <section class="scene" id="scene">
                 <div class="scene-stage">
-                    <div class="scene-composition">
-                        <div class="center-title"><h1>Ishan</h1><h1>Abraham</h1></div>
-                        <article class="category-card about">About</article>
-                        <article class="category-card projects">Projects</article>
-                        <article class="category-card work">Work</article>
-                        <article class="category-card extracurriculars">Extracurriculars</article>
+                    <div class="scene-camera">
+                        <div class="scene-composition">
+                            <div class="center-title" id="center"><h1>Ishan</h1><h1>Abraham</h1></div>
+
+                            <a class="category-link about" id="about-link" href="#about">About</a>
+                            <a class="category-link projects" id="projects-link" href="#projects">Projects</a>
+                            <a class="category-link work" id="work-link" href="#work">Work</a>
+                            <a class="category-link extracurriculars" id="extracurriculars-link" href="#extracurriculars">Extracurriculars</a>
+
+                            <section class="category-region about-region" id="about" aria-labelledby="about-link">
+                                <h2>About</h2>
+                                <article class="detail-card">
+                                    <h3>Who I am</h3>
+                                    <p>CS and Math student building systems that feel intentional and durable.</p>
+                                    <span>San Francisco to Portland</span>
+                                </article>
+                                <article class="detail-card">
+                                    <h3>What I care about</h3>
+                                    <p>Applied AI, backend systems, investing, and sports-driven discipline.</p>
+                                    <span>Research + execution</span>
+                                </article>
+                                <article class="detail-card">
+                                    <h3>How I work</h3>
+                                    <p>I like clean architectures, sharp interfaces, and products with a point of view.</p>
+                                    <span>Pragmatic and technical</span>
+                                </article>
+                            </section>
+
+                            <section class="category-region projects-region" id="projects" aria-labelledby="projects-link">
+                                <h2>Projects</h2>
+                                <article class="detail-card">
+                                    <h3>CWC Audit Runner</h3>
+                                    <p>Automated portfolio audit workflows with a web interface for live use.</p>
+                                    <span>Python, web automation</span>
+                                </article>
+                                <article class="detail-card">
+                                    <h3>Slack Bot</h3>
+                                    <p>Built an AI assistant that remembers context and reads uploaded documents.</p>
+                                    <span>Claude, retrieval, memory</span>
+                                </article>
+                                <article class="detail-card">
+                                    <h3>ICCWS Research</h3>
+                                    <p>Explored GraphRAG-based hint generation for cybersecurity education.</p>
+                                    <span>Research + applied ML</span>
+                                </article>
+                            </section>
+
+                            <section class="category-region work-region" id="work" aria-labelledby="work-link">
+                                <h2>Work</h2>
+                                <article class="detail-card">
+                                    <h3>CWC Advisors</h3>
+                                    <p>Investment Analyst and Software Engineering Intern working across research and internal tooling.</p>
+                                    <span>Lake Oswego</span>
+                                </article>
+                                <article class="detail-card">
+                                    <h3>What I built</h3>
+                                    <p>Internal workflow software for audits, reporting, and repeatable operations.</p>
+                                    <span>Automation and tooling</span>
+                                </article>
+                                <article class="detail-card">
+                                    <h3>What I analyzed</h3>
+                                    <p>Company research, financial modeling, and investment support materials.</p>
+                                    <span>Valuation and diligence</span>
+                                </article>
+                            </section>
+
+                            <section class="category-region extracurriculars-region" id="extracurriculars" aria-labelledby="extracurriculars-link">
+                                <h2>Extracurriculars</h2>
+                                <article class="detail-card">
+                                    <h3>College Soccer</h3>
+                                    <p>Competitive athletics shaped how I think about pressure, consistency, and teamwork.</p>
+                                    <span>Discipline and repetition</span>
+                                </article>
+                                <article class="detail-card">
+                                    <h3>Music</h3>
+                                    <p>Spent years playing trumpet, piano, and violin.</p>
+                                    <span>Range and structure</span>
+                                </article>
+                                <article class="detail-card">
+                                    <h3>Research Writing</h3>
+                                    <p>Lead author on work about AI-generated hints for cybersecurity students.</p>
+                                    <span>Communication + systems</span>
+                                </article>
+                            </section>
+                        </div>
                     </div>
+                    <a class="back-to-center" href="#center" aria-label="Back to center">&gt;</a>
                 </div>
             </section>
         </main>
