@@ -4,9 +4,18 @@ const sceneComposition = document.querySelector(".scene-composition");
 const categoryLinks = Array.from(document.querySelectorAll(".category-link"));
 
 const DESKTOP_QUERY = window.matchMedia("(min-width: 960px)");
-const INTRO_SCALE_START = 2.25;
-const HUB_SCALE = 0.62;
 const CENTER_TARGET = "center";
+const SCENE_CONFIG = {
+  introZoomMultiplier: 3.25,
+  sceneWidthMultiplier: 2.55,
+  sceneHeightMultiplier: 2.35,
+  minSceneWidth: 1800,
+  minSceneHeight: 1400,
+  hubPaddingX: 88,
+  hubPaddingY: 72,
+  focusPaddingX: 104,
+  focusPaddingY: 88,
+};
 const VALID_TARGETS = new Set([
   CENTER_TARGET,
   "about",
@@ -15,15 +24,39 @@ const VALID_TARGETS = new Set([
   "extracurriculars",
 ]);
 
-const CAMERA_TARGETS = {
-  center: { x: "0vw", y: "0vh", scale: HUB_SCALE },
-};
-
 const FOCUS_LAYOUTS = {
-  about: { selector: ".about", viewportX: 0.77, viewportY: 0.76, scale: 1.18 },
-  projects: { selector: ".projects", viewportX: 0.23, viewportY: 0.76, scale: 1.18 },
-  work: { selector: ".work", viewportX: 0.77, viewportY: 0.24, scale: 1.22 },
-  extracurriculars: { selector: ".extracurriculars", viewportX: 0.23, viewportY: 0.24, scale: 1.18 },
+  about: {
+    selector: ".about",
+    regionSelector: ".about-region",
+    anchorX: "right",
+    anchorY: "bottom",
+    minScale: 0.72,
+    maxScale: 0.98,
+  },
+  projects: {
+    selector: ".projects",
+    regionSelector: ".projects-region",
+    anchorX: "left",
+    anchorY: "bottom",
+    minScale: 0.72,
+    maxScale: 0.98,
+  },
+  work: {
+    selector: ".work",
+    regionSelector: ".work-region",
+    anchorX: "right",
+    anchorY: "top",
+    minScale: 0.72,
+    maxScale: 1,
+  },
+  extracurriculars: {
+    selector: ".extracurriculars",
+    regionSelector: ".extracurriculars-region",
+    anchorX: "left",
+    anchorY: "top",
+    minScale: 0.72,
+    maxScale: 0.98,
+  },
 };
 
 const state = {
@@ -37,38 +70,146 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
+function updateSceneMetrics() {
+  if (!sceneComposition || !DESKTOP_QUERY.matches) {
+    return;
+  }
+
+  const width = Math.max(
+    window.innerWidth * SCENE_CONFIG.sceneWidthMultiplier,
+    SCENE_CONFIG.minSceneWidth
+  );
+  const height = Math.max(
+    window.innerHeight * SCENE_CONFIG.sceneHeightMultiplier,
+    SCENE_CONFIG.minSceneHeight
+  );
+
+  sceneComposition.style.setProperty("--scene-width", `${width}px`);
+  sceneComposition.style.setProperty("--scene-height", `${height}px`);
+}
+
+function getElementBox(element) {
+  return {
+    left: element.offsetLeft,
+    top: element.offsetTop,
+    right: element.offsetLeft + element.offsetWidth,
+    bottom: element.offsetTop + element.offsetHeight,
+  };
+}
+
+function getCombinedBox(elements) {
+  const boxes = elements.filter(Boolean).map(getElementBox);
+
+  if (!boxes.length) {
+    return null;
+  }
+
+  return boxes.reduce(
+    (combined, box) => ({
+      left: Math.min(combined.left, box.left),
+      top: Math.min(combined.top, box.top),
+      right: Math.max(combined.right, box.right),
+      bottom: Math.max(combined.bottom, box.bottom),
+    }),
+    boxes[0]
+  );
+}
+
+function getViewportFromBox(box, options = {}) {
+  if (!sceneComposition || !box) {
+    return { x: 0, y: 0, scale: 1 };
+  }
+
+  const {
+    viewportX = 0.5,
+    viewportY = 0.5,
+    anchorX = "center",
+    anchorY = "center",
+    paddingX = 0,
+    paddingY = 0,
+    minScale = 0.25,
+    maxScale = Infinity,
+  } = options;
+
+  const compositionWidth = sceneComposition.offsetWidth;
+  const compositionHeight = sceneComposition.offsetHeight;
+  const boxWidth = Math.max(box.right - box.left, 1);
+  const boxHeight = Math.max(box.bottom - box.top, 1);
+  const fitScale = Math.min(
+    (window.innerWidth - paddingX * 2) / boxWidth,
+    (window.innerHeight - paddingY * 2) / boxHeight
+  );
+  const scale = clamp(fitScale, minScale, maxScale);
+  let boxReferenceX = (box.left + box.right) / 2;
+  let boxReferenceY = (box.top + box.bottom) / 2;
+  let desiredViewportX = window.innerWidth * viewportX;
+  let desiredViewportY = window.innerHeight * viewportY;
+
+  if (anchorX === "left") {
+    boxReferenceX = box.left;
+    desiredViewportX = paddingX;
+  } else if (anchorX === "right") {
+    boxReferenceX = box.right;
+    desiredViewportX = window.innerWidth - paddingX;
+  }
+
+  if (anchorY === "top") {
+    boxReferenceY = box.top;
+    desiredViewportY = paddingY;
+  } else if (anchorY === "bottom") {
+    boxReferenceY = box.bottom;
+    desiredViewportY = window.innerHeight - paddingY;
+  }
+
+  return {
+    x:
+      desiredViewportX -
+      window.innerWidth / 2 -
+      scale * (boxReferenceX - compositionWidth / 2),
+    y:
+      desiredViewportY -
+      window.innerHeight / 2 -
+      scale * (boxReferenceY - compositionHeight / 2),
+    scale,
+  };
+}
+
+function getHubViewport() {
+  const hubElements = [document.querySelector(".center-title"), ...categoryLinks];
+  const hubBox = getCombinedBox(hubElements);
+
+  return getViewportFromBox(hubBox, {
+    viewportX: 0.5,
+    viewportY: 0.5,
+    paddingX: SCENE_CONFIG.hubPaddingX,
+    paddingY: SCENE_CONFIG.hubPaddingY,
+    minScale: 0.42,
+    maxScale: 0.9,
+  });
+}
+
 function getViewportTarget(target) {
   if (target === CENTER_TARGET) {
-    return CAMERA_TARGETS.center;
+    return getHubViewport();
   }
 
   const config = FOCUS_LAYOUTS[target];
   const focusElement = config ? document.querySelector(config.selector) : null;
-
-  if (!config || !focusElement || !sceneComposition) {
-    return CAMERA_TARGETS.center;
-  }
-
-  const compositionWidth = sceneComposition.offsetWidth;
-  const compositionHeight = sceneComposition.offsetHeight;
-  const elementCenterX = focusElement.offsetLeft + focusElement.offsetWidth / 2;
-  const elementCenterY = focusElement.offsetTop + focusElement.offsetHeight / 2;
-  const desiredViewportX = window.innerWidth * config.viewportX;
-  const desiredViewportY = window.innerHeight * config.viewportY;
-
-  const x =
-    desiredViewportX -
-    window.innerWidth / 2 -
-    config.scale * (elementCenterX - compositionWidth / 2);
-  const y =
-    desiredViewportY -
-    window.innerHeight / 2 -
-    config.scale * (elementCenterY - compositionHeight / 2);
+  const regionElement = config ? document.querySelector(config.regionSelector) : null;
+  const focusBox = getCombinedBox([focusElement, regionElement]);
+  const viewport = getViewportFromBox(focusBox, {
+    anchorX: config?.anchorX,
+    anchorY: config?.anchorY,
+    paddingX: SCENE_CONFIG.focusPaddingX,
+    paddingY: SCENE_CONFIG.focusPaddingY,
+    minScale: config?.minScale,
+    maxScale: config?.maxScale,
+  });
 
   return {
-    x: `${x}px`,
-    y: `${y}px`,
-    scale: config.scale,
+    x: `${viewport.x}px`,
+    y: `${viewport.y}px`,
+    scale: viewport.scale,
   };
 }
 
@@ -91,9 +232,12 @@ function setCameraViewport(viewport, animate) {
     return;
   }
 
+  const x = typeof viewport.x === "number" ? `${viewport.x}px` : viewport.x;
+  const y = typeof viewport.y === "number" ? `${viewport.y}px` : viewport.y;
+
   sceneCamera.classList.toggle("is-animated", animate);
-  sceneCamera.style.setProperty("--camera-x", viewport.x);
-  sceneCamera.style.setProperty("--camera-y", viewport.y);
+  sceneCamera.style.setProperty("--camera-x", x);
+  sceneCamera.style.setProperty("--camera-y", y);
   sceneCamera.style.setProperty("--camera-scale", viewport.scale);
 }
 
@@ -140,9 +284,18 @@ function updateIntroCamera() {
 
   state.introProgress = getIntroProgress();
   state.mode = state.introProgress >= 1 ? "hub" : "intro";
+  const hubViewport = getHubViewport();
+  const introScaleStart = Math.max(
+    hubViewport.scale * SCENE_CONFIG.introZoomMultiplier,
+    1.9
+  );
+  const scale =
+    introScaleStart -
+    state.introProgress * (introScaleStart - hubViewport.scale);
+  const x = hubViewport.x * state.introProgress;
+  const y = hubViewport.y * state.introProgress;
 
-  const scale = INTRO_SCALE_START - state.introProgress * (INTRO_SCALE_START - HUB_SCALE);
-  setCameraViewport({ x: "0vw", y: "0vh", scale }, false);
+  setCameraViewport({ x: `${x}px`, y: `${y}px`, scale }, false);
   applyBodyClasses();
   syncActiveLinks();
 }
@@ -253,9 +406,12 @@ function handleResize() {
     sceneCamera?.style.removeProperty("--camera-x");
     sceneCamera?.style.removeProperty("--camera-y");
     sceneCamera?.style.removeProperty("--camera-scale");
+    sceneComposition?.style.removeProperty("--scene-width");
+    sceneComposition?.style.removeProperty("--scene-height");
     return;
   }
 
+  updateSceneMetrics();
   syncFromLocation();
 }
 
@@ -270,4 +426,5 @@ if (!window.location.hash) {
   history.replaceState(null, "", "#center");
 }
 
+updateSceneMetrics();
 syncFromLocation(CENTER_TARGET);

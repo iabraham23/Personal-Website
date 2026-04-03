@@ -57,8 +57,8 @@ a {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 180rem;
-  height: 140rem;
+  width: var(--scene-width, 180rem);
+  height: var(--scene-height, 140rem);
   transform: translate(-50%, -50%);
 }
 
@@ -111,23 +111,23 @@ a {
 }
 
 .about {
-  top: 30%;
-  left: 32%;
+  top: 28%;
+  left: 29%;
 }
 
 .projects {
-  top: 30%;
-  right: 31%;
+  top: 28%;
+  right: 29%;
 }
 
 .work {
-  bottom: 29%;
-  left: 31%;
+  bottom: 28%;
+  left: 29%;
 }
 
 .extracurriculars {
-  right: 27%;
-  bottom: 29%;
+  right: 29%;
+  bottom: 28%;
 }
 
 .category-region {
@@ -175,23 +175,23 @@ a {
 }
 
 .about-region {
-  top: 6%;
-  left: 7%;
+  top: 4%;
+  left: 4%;
 }
 
 .projects-region {
-  top: 5%;
-  right: 6%;
+  top: 4%;
+  right: 4%;
 }
 
 .work-region {
-  bottom: 6%;
-  left: 8%;
+  bottom: 4%;
+  left: 4%;
 }
 
 .extracurriculars-region {
   right: 4%;
-  bottom: 6%;
+  bottom: 4%;
 }
 
 .back-to-center {
