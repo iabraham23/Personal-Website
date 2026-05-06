@@ -1,6 +1,3 @@
-const contactForm = document.getElementById("contact-form");
-const emailInput = document.getElementById("email");
-const contactStatus = document.getElementById("contact-status");
 const weatherIcon = document.getElementById("weather-icon");
 const weatherSummary = document.getElementById("weather-summary");
 const weatherStates = ["weather-sun", "weather-rain", "weather-cloud", "weather-night"];
@@ -76,27 +73,6 @@ function setWeatherState(state) {
     }
 }
 
-function setContactStatus(message, type) {
-    contactStatus.textContent = message;
-    contactStatus.className = type ? `contact-status is-${type}` : "contact-status";
-}
-
-async function postContactEmail(email) {
-    const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email })
-    });
-
-    const payload = await response.json().catch(() => ({}));
-
-    if (!response.ok || !payload.ok) {
-        throw new Error(payload.error || "Unable to save your email right now.");
-    }
-}
-
 async function loadPortlandWeather() {
     const weatherUrl = new URL("https://api.open-meteo.com/v1/forecast");
     weatherUrl.search = new URLSearchParams({
@@ -152,32 +128,3 @@ async function loadPortlandWeather() {
 }
 
 document.addEventListener("DOMContentLoaded", loadPortlandWeather);
-
-contactForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const email = emailInput.value.trim();
-    setContactStatus("");
-
-    if (!email) {
-        setContactStatus("Please enter an email address.", "error");
-        return;
-    }
-
-    const submitButton = contactForm.querySelector("button");
-    submitButton.disabled = true;
-    submitButton.textContent = "Sending...";
-
-    postContactEmail(email)
-        .then(() => {
-            contactForm.reset();
-            setContactStatus("Thanks. Your email has been saved.", "success");
-        })
-        .catch((error) => {
-            setContactStatus(error.message || "Something went wrong. Please try again.", "error");
-        })
-        .finally(() => {
-            submitButton.disabled = false;
-            submitButton.textContent = "Send";
-        });
-});

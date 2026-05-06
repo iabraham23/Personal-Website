@@ -159,6 +159,55 @@
         </div>
     </footer>
 
+    <script>
+        const contactForm = document.getElementById("contact-form");
+        const emailInput = document.getElementById("email");
+        const contactStatus = document.getElementById("contact-status");
+
+        contactForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const email = emailInput.value.trim();
+            contactStatus.textContent = "";
+            contactStatus.className = "contact-status";
+
+            if (!email) {
+                contactStatus.textContent = "Please enter an email address.";
+                contactStatus.classList.add("is-error");
+                return;
+            }
+
+            const submitButton = contactForm.querySelector("button");
+            submitButton.disabled = true;
+            submitButton.textContent = "Sending...";
+
+            try {
+                const response = await fetch("/api/contact", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email })
+                });
+
+                const payload = await response.json().catch(() => ({}));
+
+                if (!response.ok || !payload.ok) {
+                    throw new Error(payload.error || "Unable to save your email right now.");
+                }
+
+                contactForm.reset();
+                contactStatus.textContent = "Thanks. Your email has been saved.";
+                contactStatus.classList.add("is-success");
+            } catch (error) {
+                contactStatus.textContent = error.message || "Something went wrong. Please try again.";
+                contactStatus.classList.add("is-error");
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = "Send";
+            }
+        });
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
