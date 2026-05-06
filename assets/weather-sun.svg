@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Sunny weather</title>
+  <desc id="desc">A cartoon yellow sun with soft orange rays.</desc>
+  <rect width="128" height="128" rx="28" fill="#fff7c8"/>
+  <g stroke="#f6a51a" stroke-linecap="round" stroke-width="8">
+    <path d="M64 18v12"/>
+    <path d="M64 98v12"/>
+    <path d="M18 64h12"/>
+    <path d="M98 64h12"/>
+    <path d="M31.5 31.5l8.5 8.5"/>
+    <path d="M88 88l8.5 8.5"/>
+    <path d="M96.5 31.5L88 40"/>
+    <path d="M40 88l-8.5 8.5"/>
+  </g>
+  <circle cx="64" cy="64" r="31" fill="#ffd460" stroke="#f6a51a" stroke-width="6"/>
+  <circle cx="52" cy="58" r="4" fill="#423026"/>
+  <circle cx="76" cy="58" r="4" fill="#423026"/>
+  <path d="M52 72c6 8 18 8 24 0" fill="none" stroke="#423026" stroke-linecap="round" stroke-width="5"/>
+</svg>

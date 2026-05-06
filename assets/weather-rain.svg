@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Rainy weather</title>
+  <desc id="desc">A cartoon rain cloud with smiling blue raindrops.</desc>
+  <rect width="128" height="128" rx="28" fill="#dff3ff"/>
+  <path d="M37 72c-12 0-22-9-22-21 0-11 9-20 20-21 5-11 16-18 29-18 15 0 28 10 31 24 10 2 18 10 18 20 0 12-10 21-23 21H37z" fill="#ffffff" stroke="#8eb7cc" stroke-linejoin="round" stroke-width="6"/>
+  <path d="M43 53c7-11 21-15 33-9" fill="none" stroke="#c7e4f2" stroke-linecap="round" stroke-width="5"/>
+  <g fill="#4aa3df" stroke="#2378b3" stroke-width="4">
+    <path d="M39 84c0 8-6 13-12 13s-12-5-12-13c0-6 8-16 12-22 4 6 12 16 12 22z"/>
+    <path d="M76 92c0 8-6 13-12 13s-12-5-12-13c0-6 8-16 12-22 4 6 12 16 12 22z"/>
+    <path d="M113 84c0 8-6 13-12 13s-12-5-12-13c0-6 8-16 12-22 4 6 12 16 12 22z"/>
+  </g>
+  <g fill="#17324d">
+    <circle cx="23" cy="84" r="2.5"/>
+    <circle cx="31" cy="84" r="2.5"/>
+    <circle cx="60" cy="92" r="2.5"/>
+    <circle cx="68" cy="92" r="2.5"/>
+    <circle cx="97" cy="84" r="2.5"/>
+    <circle cx="105" cy="84" r="2.5"/>
+  </g>
+</svg>
