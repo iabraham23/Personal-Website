@@ -27,6 +27,27 @@ header {
     text-align: center;
 }
 
+.header-content {
+    position: relative;
+}
+
+.header-copy {
+    padding-right: 176px;
+}
+
+.profile-photo {
+    border: 3px solid rgba(255, 255, 255, 0.82);
+    border-radius: 50%;
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.24);
+    height: 136px;
+    object-fit: cover;
+    object-position: 78% center;
+    position: absolute;
+    right: 24px;
+    top: 0;
+    width: 136px;
+}
+
 h1 {
     font-size: 2.4rem;
     margin-bottom: 8px;
@@ -246,6 +267,18 @@ p {
 }
 
 @media (max-width: 640px) {
+    .header-copy {
+        padding-right: 0;
+    }
+
+    .profile-photo {
+        display: block;
+        height: 128px;
+        margin: 0 auto 24px;
+        position: static;
+        width: 128px;
+    }
+
     .contact-form-row {
         flex-direction: column;
     }
